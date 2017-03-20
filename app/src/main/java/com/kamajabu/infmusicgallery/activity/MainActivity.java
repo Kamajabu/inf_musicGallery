@@ -13,6 +13,7 @@ import android.view.View;
 import com.kamajabu.infmusicgallery.R;
 import com.kamajabu.infmusicgallery.adapter.GalleryAdapter;
 import com.kamajabu.infmusicgallery.model.Image;
+import com.kamajabu.infmusicgallery.musicmanager.SlideshowMusicFragment;
 
 import java.util.ArrayList;
 
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements ConfigData {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.setCustomAnimations(R.anim.anim_slide_in_top, R.anim.anim_slide_out_bottom);
                 
-                SlideshowDialogFragment newFragment = SlideshowDialogFragment.newInstance();
+                SlideshowMusicFragment newFragment = SlideshowMusicFragment.newInstance();
                 newFragment.setCancelable(false);
                 newFragment.setArguments(bundle);
                 newFragment.show(ft, "slideshow");

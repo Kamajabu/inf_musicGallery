@@ -75,11 +75,6 @@ public class SlideshowDialogFragment extends DialogFragment {
         return v;
     }
 
-//    @OnClick(R.id.backButton)
-//    public void backButtonDidTouch(){
-//        dismiss();
-//    }
-
     private void setCurrentItem(int position) {
         viewPager.setCurrentItem(position, false);
         displayMetaInfo(selectedPosition);
