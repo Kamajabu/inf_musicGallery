@@ -112,7 +112,6 @@ public class SlideshowDialogFragment extends DialogFragment {
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
     }
 
-
     //	adapter
     public class MyViewPagerAdapter extends PagerAdapter {
 
@@ -156,6 +155,7 @@ public class SlideshowDialogFragment extends DialogFragment {
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
+
             container.removeView((View) object);
         }
     }

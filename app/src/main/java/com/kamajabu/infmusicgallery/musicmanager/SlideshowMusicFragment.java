@@ -56,6 +56,7 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
     private TextView songTitleLabel;
     private TextView songCurrentDurationLabel;
     private TextView songTotalDurationLabel;
+    private ImageView musicPicture;
 
     // Media Player
     private  MediaPlayer mp;
@@ -91,7 +92,7 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_music_slider, container, false);
-//        viewPager = (ViewPager) v.findViewById(R.id.viewpager);
+        viewPager = (ViewPager) v.findViewById(R.id.viewpager);
 //        lblCount = (TextView) v.findViewById(R.id.lbl_count);
 //        lblTitle = (TextView) v.findViewById(R.id.title);
 //        lblDate = (TextView) v.findViewById(R.id.date);
@@ -123,14 +124,11 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
         images = (ArrayList<Image>) getArguments().getSerializable("images");
         selectedPosition = getArguments().getInt("position");
 
-        Log.e(TAG, "position: " + selectedPosition);
-        Log.e(TAG, "images size: " + images.size());
-
-//        myViewPagerAdapter = new MyViewPagerAdapter();
-//        viewPager.setAdapter(myViewPagerAdapter);
-//        viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+        myViewPagerAdapter = new MyViewPagerAdapter();
+        viewPager.setAdapter(myViewPagerAdapter);
+        viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 //
-//        setCurrentItem(selectedPosition);
+        setCurrentItem(selectedPosition);
 
         // Mediaplayer
 //		mp = MediaPlayer.create(this, R.raw.sample);
@@ -435,11 +433,19 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
     };
 
     private void displayMetaInfo(int position) {
-        lblCount.setText((position + 1) + " of " + images.size());
+//        lblCount.setText((position + 1) + " of " + images.size());
 
-        Image image = images.get(position);
-        lblTitle.setText(image.getName());
+//        Image image = images.get(position);
+//        lblTitle.setText(image.getName());
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mHandler.removeCallbacks(mUpdateTimeTask);
+        mp.release();
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -471,6 +477,9 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
                     .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageViewPreview);
+
+//            Log.e(TAG, "position: " + selectedPosition);
+//            Log.e(TAG, "images size: " + images.size());
 
             container.addView(view);
 

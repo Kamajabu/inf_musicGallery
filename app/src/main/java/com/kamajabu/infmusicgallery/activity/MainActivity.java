@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements ConfigData {
                 ft.setCustomAnimations(R.anim.anim_slide_in_top, R.anim.anim_slide_out_bottom);
                 
                 SlideshowMusicFragment newFragment = SlideshowMusicFragment.newInstance();
-                newFragment.setCancelable(false);
+//                newFragment.setCancelable(false);
                 newFragment.setArguments(bundle);
                 newFragment.show(ft, "slideshow");
             }
