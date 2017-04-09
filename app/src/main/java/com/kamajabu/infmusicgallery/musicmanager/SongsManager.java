@@ -11,93 +11,111 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SongsManager {
-	// SDCard Path
-	final String MEDIA_PATH = new String(getSDPath() + "/Download");//暂时写死路径在SD卡或者自带存储的/Download里面，只认MP3格式
-	private ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
-	
-	// Constructor
-	public SongsManager(){
-		
-	}
+    // SDCard Path
+    final String MEDIA_PATH = new String(getSDPath() + "/Download");
+    private ArrayList<HashMap<String, String>> songsList = new ArrayList<>();
 
-    public String getSDPath(){
+    // Constructor
+    public SongsManager() {
+
+    }
+
+    public String getSDPath() {
         File sdDir = null;
         boolean sdCardExist = Environment.getExternalStorageState()
-                .equals(Environment.MEDIA_MOUNTED);   //判断外置SD卡是否存在
-        if(sdCardExist)
-        {
-            sdDir = Environment.getExternalStorageDirectory();//获取外置SD卡根目录
-        }
-        else{
-            sdDir = Environment.getRootDirectory();//获取内置SD卡根目录
+                .equals(Environment.MEDIA_MOUNTED);
+        if (sdCardExist) {
+            sdDir = Environment.getExternalStorageDirectory();
+        } else {
+            sdDir = Environment.getRootDirectory();
         }
         return sdDir.toString();
     }
 
-	/**
-	 * Function to read all mp3 files from sdcard
-	 * and store the details in ArrayList
-	 * */
-	public ArrayList<HashMap<String, String>> getPlayListFromFile() {
-		File home = new File(MEDIA_PATH);
+    /**
+     * Function to read all mp3 files from sdcard
+     * and store the details in ArrayList
+     */
+    public ArrayList<HashMap<String, String>> getPlayListFromFile() {
+        File home = new File(MEDIA_PATH);
 
         System.out.println(home);
 
-		if (home.listFiles(new FileExtensionFilter()).length > 0) {
-			for (File file : home.listFiles(new FileExtensionFilter())) {
-				HashMap<String, String> song = new HashMap<String, String>();
-				song.put("songTitle", file.getName().substring(0, (file.getName().length() - 4)));
-				song.put("songPath", file.getPath());
-				
-				// Adding each song to SongList
-				songsList.add(song);
-			}
-		}
-        else{
+        if (home.listFiles(new FileExtensionFilter()).length > 0) {
+            for (File file : home.listFiles(new FileExtensionFilter())) {
+                HashMap<String, String> song = new HashMap<String, String>();
+                song.put("songTitle", file.getName().substring(0, (file.getName().length() - 4)));
+                song.put("songPath", file.getPath());
+
+                // Adding each song to SongList
+                songsList.add(song);
+            }
+        } else {
             HashMap<String, String> song = new HashMap<String, String>();
-            song.put("songTitle","现在你没有下载歌曲噢");
-            song.put("songPath","/");
+            song.put("songTitle", "123");
+            song.put("songPath", "/");
             songsList.add(song);
         }
-		// return songs list array
-		return songsList;
-	}
-	
-	/**
-	 * Class to filter files which are having .mp3 extension
-	 * */
-	class FileExtensionFilter implements FilenameFilter {
-		public boolean accept(File dir, String name) {
-			return (name.endsWith(".mp3") || name.endsWith(".MP3") || name.endsWith(".ogg") || name.endsWith(".OGG"));
-		}
-	}
+        // return songs list array
+        return songsList;
+    }
 
-
+    /**
+     * Class to filter files which are having .mp3 extension
+     */
+    class FileExtensionFilter implements FilenameFilter {
+        public boolean accept(File dir, String name) {
+            return (name.endsWith(".mp3") || name.endsWith(".MP3") || name.endsWith(".ogg") || name.endsWith(".OGG"));
+        }
+    }
 
 
     public ArrayList<HashMap<String, String>> getPlayListFromContent(Context mediaContext) {
         ArrayList<HashMap<String, String>> listAudio = new ArrayList<>();
 
-//        Cursor cursor = mediaContext.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-//                null, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-//        System.out.println("count = " + cursor.getCount());  //获取总共有多少个条目
-//        while (cursor.moveToNext()) {
 
-//      MediaStore.Audio.Media._ID,     //媒体文件的ID值
-//      MediaStore.Audio.Media.DISPLAY_NAME,        //媒体文件的文件名
-//      MediaStore.Audio.Media.DATA,    //媒体文件的绝对路径
-//      MediaStore.Audio.Media.SIZE         //媒体文件的大小
-//      System.out.println("ColumnCount = " + cursor.getColumnCount());
-//      System.out.println(cursor.getString(0)); // 音频ID
-//      System.out.println(cursor.getString(1)); // 音频绝对路径
-//      System.out.println(cursor.getString(2)); // 音频文件名
-//      System.out.println(cursor.getString(3)); // 音频的大小 字节
+        HashMap<String, String> song = new HashMap<>();
+        song.put("songTitle", "birthday");
+        song.put("songPath", String.valueOf(R.raw.birthday));
+        listAudio.add(song);
 
-            HashMap<String, String> song = new HashMap<>();
-            song.put("songTitle", "Titlu");
-            song.put("songPath", String.valueOf(R.raw.sample));
-            listAudio.add(song);
-//        }
+        song.put("songTitle", "black ant");
+        song.put("songPath", String.valueOf(R.raw.black_ant));
+
+        song.put("songTitle", "box cat");
+        song.put("songPath", String.valueOf(R.raw.box_cat));
+
+        song.put("songTitle", "energy");
+        song.put("songPath", String.valueOf(R.raw.energy));
+
+        song.put("songTitle", "faithful_dog");
+        song.put("songPath", String.valueOf(R.raw.faithful_dog));
+
+        song.put("songTitle", "humsafar");
+        song.put("songPath", String.valueOf(R.raw.humsafar));
+
+        song.put("songTitle", "jason_shaw");
+        song.put("songPath", String.valueOf(R.raw.jason_shaw));
+
+        song.put("songTitle", "night_owl");
+        song.put("songPath", String.valueOf(R.raw.night_owl));
+
+        song.put("songTitle", "romantic");
+        song.put("songPath", String.valueOf(R.raw.romantic));
+
+        song.put("songTitle", "siesta");
+        song.put("songPath", String.valueOf(R.raw.siesta));
+
+        song.put("songTitle", "siri");
+        song.put("songPath", String.valueOf(R.raw.siri));
+
+        song.put("songTitle", "springish");
+        song.put("songPath", String.valueOf(R.raw.springish));
+
+        song.put("songTitle", "starling");
+        song.put("songPath", String.valueOf(R.raw.starling));
+
+        listAudio.add(song);
         return listAudio;
     }
 }

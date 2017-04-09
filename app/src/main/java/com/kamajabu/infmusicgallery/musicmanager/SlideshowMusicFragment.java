@@ -30,51 +30,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class SlideshowMusicFragment extends DialogFragment implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener{
-    private String TAG = SlideshowMusicFragment.class.getSimpleName();
-    private ArrayList<Image> images;
-    private ViewPager viewPager;
-    private MyViewPagerAdapter myViewPagerAdapter;
-    private TextView lblCount, lblTitle, lblDate;
-    private int selectedPosition = 0;
-
-    //music player fields
-
-    private static final String RES_PREFIX = "android.resource://com.kamajabu.infmusicgallery/";
-
-    private ImageButton btnPlay;
-    private ImageButton btnForward;
-    private ImageButton btnBackward;
-    private ImageButton btnNext;
-    private ImageButton btnPrevious;
-    private ImageButton btnPlaylist;
-    private ImageButton btnRepeat;
-    private ImageButton btnShuffle;
-    private SeekBar songProgressBar;
-    private TextView songTitleLabel;
-    private TextView songCurrentDurationLabel;
-    private TextView songTotalDurationLabel;
-    private ImageView musicPicture;
-
-    // Media Player
-    private  MediaPlayer mp;
-    // Handler to update UI timer, progress bar etc,.
-    private Handler mHandler = new Handler();;
-    private SongsManager songManager;
-    private Utilities utils;
-    private int seekForwardTime = 5000; // 5000 milliseconds
-    private int seekBackwardTime = 5000; // 5000 milliseconds
-    private int currentSongIndex = 0;
-    private boolean isShuffle = false;
-    private boolean isRepeat = false;
-    private ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
-
-    //end
-
-
-
+public class SlideshowMusicFragment extends MusicPlayerControls
+        implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
 
     public static SlideshowMusicFragment newInstance() {
         SlideshowMusicFragment f = new SlideshowMusicFragment();
@@ -92,34 +53,10 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_music_slider, container, false);
+        ButterKnife.setDebug(true);
+        ButterKnife.bind(this, v);
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
-//        lblCount = (TextView) v.findViewById(R.id.lbl_count);
-//        lblTitle = (TextView) v.findViewById(R.id.title);
-//        lblDate = (TextView) v.findViewById(R.id.date);
 
-        //<---------------------------------------Start
-
-        // All player buttons
-        btnPlay = (ImageButton) v.findViewById(R.id.btnPlay);
-        btnForward = (ImageButton) v.findViewById(R.id.btnForward);
-        btnBackward = (ImageButton) v.findViewById(R.id.btnBackward);
-        btnNext = (ImageButton) v.findViewById(R.id.btnNext);
-        btnPrevious = (ImageButton) v.findViewById(R.id.btnPrevious);
-        btnPlaylist = (ImageButton) v.findViewById(R.id.btnPlaylist);
-        btnRepeat = (ImageButton) v.findViewById(R.id.btnRepeat);
-        btnShuffle = (ImageButton) v.findViewById(R.id.btnShuffle);
-        songProgressBar = (SeekBar) v.findViewById(R.id.songProgressBar);
-        songTitleLabel = (TextView) v.findViewById(R.id.songTitle);
-        songCurrentDurationLabel = (TextView) v.findViewById(R.id.songCurrentDurationLabel);
-        songTotalDurationLabel = (TextView) v.findViewById(R.id.songTotalDurationLabel);
-
-//        Button button = (Button) v.findViewById(R.id.backButton);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                dismiss();
-//            }
-//        });
-//        ButterKnife.bind(v);
 
         images = (ArrayList<Image>) getArguments().getSerializable("images");
         selectedPosition = getArguments().getInt("position");
@@ -127,12 +64,9 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
         myViewPagerAdapter = new MyViewPagerAdapter();
         viewPager.setAdapter(myViewPagerAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
-//
+
         setCurrentItem(selectedPosition);
 
-        // Mediaplayer
-//		mp = MediaPlayer.create(this, R.raw.sample);
-//		mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mp = new MediaPlayer();
         songManager = new SongsManager();
         utils = new Utilities();
@@ -148,131 +82,40 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
         // By default play first song
         playSong(0);
 
-        /**
-         * Play button click event
-         * plays a song and changes button to pause image
-         * pauses a song and changes button to play image
-         * */
-        btnPlay.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                // check for already playing
-                if(mp.isPlaying()){
-                    if(mp!=null){
-                        mp.pause();
-                        // Changing button image to play button
-                        btnPlay.setImageResource(R.drawable.btn_play);
-                    }
-                }else{
-                    // Resume song
-                    if(mp!=null){
-                        mp.start();
-                        // Changing button image to pause button
-                        btnPlay.setImageResource(R.drawable.btn_pause);
-                    }
-                }
-
-            }
-        });
-
-        /**
-         * Forward button click event
-         * Forwards song specified seconds
-         * */
-        btnForward.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                // get current song position
-                int currentPosition = mp.getCurrentPosition();
-                // check if seekForward time is lesser than song duration
-                if(currentPosition + seekForwardTime <= mp.getDuration()){
-                    // forward song
-                    mp.seekTo(currentPosition + seekForwardTime);
-                }else{
-                    // forward to end position
-                    mp.seekTo(mp.getDuration());
-                }
-            }
-        });
-
-        /**
-         * Backward button click event
-         * Backward song to specified seconds
-         * */
-        btnBackward.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                // get current song position
-                int currentPosition = mp.getCurrentPosition();
-                // check if seekBackward time is greater than 0 sec
-                if(currentPosition - seekBackwardTime >= 0){
-                    // forward song
-                    mp.seekTo(currentPosition - seekBackwardTime);
-                }else{
-                    // backward to starting position
-                    mp.seekTo(0);
-                }
-
-            }
-        });
-
-        /**
-         * Next button click event
-         * Plays next song by taking currentSongIndex + 1
-         * */
-        btnNext.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                // check if next song is there or not
-                if(currentSongIndex < (songsList.size() - 1)){
-                    playSong(currentSongIndex + 1);
-                    currentSongIndex = currentSongIndex + 1;
-                }else{
-                    // play first song
-                    playSong(0);
-                    currentSongIndex = 0;
-                }
-
-            }
-        });
-
-        /**
-         * Back button click event
-         * Plays previous song by currentSongIndex - 1
-         * */
-        btnPrevious.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                if(currentSongIndex > 0){
-                    playSong(currentSongIndex - 1);
-                    currentSongIndex = currentSongIndex - 1;
-                }else{
-                    // play last song
-                    playSong(songsList.size() - 1);
-                    currentSongIndex = songsList.size() - 1;
-                }
-
-            }
-        });
-
         return v;
     }
 
+    @OnClick(R.id.btnNext)
+    public void buttonNextWasClicked() {
+        // check if next song is there or not
+        if (currentSongIndex < (songsList.size() - 1)) {
+            playSong(currentSongIndex + 1);
+            currentSongIndex = currentSongIndex + 1;
+        } else {
+            // play first song
+            playSong(0);
+            currentSongIndex = 0;
+        }
+    }
 
-    /**
-     * Receiving song index from playlist view
-     * and play the song
-     * */
+    @OnClick(R.id.btnPrevious)
+    public void buttonPreviousWasClicked() {
+        if (currentSongIndex > 0) {
+            playSong(currentSongIndex - 1);
+            currentSongIndex = currentSongIndex - 1;
+        } else {
+            // play last song
+            playSong(songsList.size() - 1);
+            currentSongIndex = songsList.size() - 1;
+        }
+
+    }
+
     @Override
     public void onActivityResult(int requestCode,
                                  int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == 100){
+        if (resultCode == 100) {
             currentSongIndex = data.getExtras().getInt("songIndex");
             // play selected song
             playSong(currentSongIndex);
@@ -280,11 +123,7 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
 
     }
 
-    /**
-     * Function to play a song
-     * @param songIndex - index of song
-     * */
-    public void  playSong(int songIndex){
+    public void playSong(int songIndex) {
         // Play song
         try {
             mp.reset();
@@ -306,37 +145,27 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
 
             // Updating progress bar
             updateProgressBar();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (IllegalArgumentException | IllegalStateException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * Update timer on seekbar
-     * */
     public void updateProgressBar() {
         mHandler.postDelayed(mUpdateTimeTask, 100);
     }
 
-    /**
-     * Background Runnable thread
-     * */
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             long totalDuration = mp.getDuration();
             long currentDuration = mp.getCurrentPosition();
 
             // Displaying Total Duration time
-            songTotalDurationLabel.setText(""+utils.milliSecondsToTimer(totalDuration));
+            songTotalDurationLabel.setText("" + utils.milliSecondsToTimer(totalDuration));
             // Displaying time completed playing
-            songCurrentDurationLabel.setText(""+utils.milliSecondsToTimer(currentDuration));
+            songCurrentDurationLabel.setText("" + utils.milliSecondsToTimer(currentDuration));
 
             // Updating progress bar
-            int progress = (int)(utils.getProgressPercentage(currentDuration, totalDuration));
+            int progress = (int) (utils.getProgressPercentage(currentDuration, totalDuration));
             //Log.d("Progress", ""+progress);
             songProgressBar.setProgress(progress);
 
@@ -345,26 +174,18 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
         }
     };
 
-    /**
-     *
-     * */
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
 
     }
 
-    /**
-     * When user starts moving the progress handler
-     * */
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
         // remove message Handler from updating progress bar
         mHandler.removeCallbacks(mUpdateTimeTask);
     }
 
-    /**
-     * When user stops moving the progress hanlder
-     * */
+
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         mHandler.removeCallbacks(mUpdateTimeTask);
@@ -378,29 +199,24 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
         updateProgressBar();
     }
 
-    /**
-     * On Song Playing completed
-     * if repeat is ON play same song again
-     * if shuffle is ON play random song
-     * */
     @Override
     public void onCompletion(MediaPlayer arg0) {
 
         // check for repeat is ON or OFF
-        if(isRepeat){
+        if (isRepeat) {
             // repeat is on play same song again
             playSong(currentSongIndex);
-        } else if(isShuffle){
+        } else if (isShuffle) {
             // shuffle is on - play a random song
             Random rand = new Random();
             currentSongIndex = rand.nextInt((songsList.size() - 1) - 0 + 1) + 0;
             playSong(currentSongIndex);
-        } else{
+        } else {
             // no repeat or shuffle ON - play next song
-            if(currentSongIndex < (songsList.size() - 1)){
+            if (currentSongIndex < (songsList.size() - 1)) {
                 playSong(currentSongIndex + 1);
                 currentSongIndex = currentSongIndex + 1;
-            }else{
+            } else {
                 // play first song
                 playSong(0);
                 currentSongIndex = 0;
@@ -410,7 +226,6 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
 
     private void setCurrentItem(int position) {
         viewPager.setCurrentItem(position, false);
-        displayMetaInfo(selectedPosition);
     }
 
     //	page change listener
@@ -418,26 +233,17 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
 
         @Override
         public void onPageSelected(int position) {
-            displayMetaInfo(position);
         }
 
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {
-
         }
 
         @Override
         public void onPageScrollStateChanged(int arg0) {
-
         }
     };
 
-    private void displayMetaInfo(int position) {
-//        lblCount.setText((position + 1) + " of " + images.size());
-
-//        Image image = images.get(position);
-//        lblTitle.setText(image.getName());
-    }
 
     @Override
     public void onDestroyView() {
@@ -478,9 +284,6 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageViewPreview);
 
-//            Log.e(TAG, "position: " + selectedPosition);
-//            Log.e(TAG, "images size: " + images.size());
-
             container.addView(view);
 
             return view;
@@ -493,7 +296,7 @@ public class SlideshowMusicFragment extends DialogFragment implements MediaPlaye
 
         @Override
         public boolean isViewFromObject(View view, Object obj) {
-            return view == ((View) obj);
+            return view == obj;
         }
 
 
