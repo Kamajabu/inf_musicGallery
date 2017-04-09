@@ -74,48 +74,19 @@ public class SongsManager {
         ArrayList<HashMap<String, String>> listAudio = new ArrayList<>();
 
 
-        HashMap<String, String> song = new HashMap<>();
-        song.put("songTitle", "birthday");
-        song.put("songPath", String.valueOf(R.raw.birthday));
-        listAudio.add(song);
+        String[] names = {"birthday",  "black ant", "box cat",  "energy", "faithful_dog", "humsafar",
+                "jason_shaw", "night_owl", "romantic", "siesta", "siri", "springish",  "starling"};
 
-        song.put("songTitle", "black ant");
-        song.put("songPath", String.valueOf(R.raw.black_ant));
+        int[] ids = {R.raw.birthday, R.raw.black_ant, R.raw.box_cat, R.raw.energy, R.raw.faithful_dog,
+                R.raw.humsafar, R.raw.jason_shaw, R.raw.night_owl, R.raw.romantic, R.raw.siesta, R.raw.siri,
+                R.raw.springish, R.raw.starling };
 
-        song.put("songTitle", "box cat");
-        song.put("songPath", String.valueOf(R.raw.box_cat));
-
-        song.put("songTitle", "energy");
-        song.put("songPath", String.valueOf(R.raw.energy));
-
-        song.put("songTitle", "faithful_dog");
-        song.put("songPath", String.valueOf(R.raw.faithful_dog));
-
-        song.put("songTitle", "humsafar");
-        song.put("songPath", String.valueOf(R.raw.humsafar));
-
-        song.put("songTitle", "jason_shaw");
-        song.put("songPath", String.valueOf(R.raw.jason_shaw));
-
-        song.put("songTitle", "night_owl");
-        song.put("songPath", String.valueOf(R.raw.night_owl));
-
-        song.put("songTitle", "romantic");
-        song.put("songPath", String.valueOf(R.raw.romantic));
-
-        song.put("songTitle", "siesta");
-        song.put("songPath", String.valueOf(R.raw.siesta));
-
-        song.put("songTitle", "siri");
-        song.put("songPath", String.valueOf(R.raw.siri));
-
-        song.put("songTitle", "springish");
-        song.put("songPath", String.valueOf(R.raw.springish));
-
-        song.put("songTitle", "starling");
-        song.put("songPath", String.valueOf(R.raw.starling));
-
-        listAudio.add(song);
+        for(int i = 0; i<names.length; i++) {
+            HashMap<String, String> song = new HashMap<>();
+            song.put("songTitle", names[i]);
+            song.put("songPath", String.valueOf(ids[i]));
+            listAudio.add(song);
+        }
         return listAudio;
     }
 }

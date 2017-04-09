@@ -96,6 +96,7 @@ public class SlideshowMusicFragment extends MusicPlayerControls
             playSong(0);
             currentSongIndex = 0;
         }
+        viewPager.setCurrentItem(currentSongIndex);
     }
 
     @OnClick(R.id.btnPrevious)
@@ -108,7 +109,7 @@ public class SlideshowMusicFragment extends MusicPlayerControls
             playSong(songsList.size() - 1);
             currentSongIndex = songsList.size() - 1;
         }
-
+        viewPager.setCurrentItem(currentSongIndex);
     }
 
     @Override
