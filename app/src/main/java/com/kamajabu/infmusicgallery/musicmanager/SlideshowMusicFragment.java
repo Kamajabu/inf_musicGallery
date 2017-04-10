@@ -76,6 +76,11 @@ public class SlideshowMusicFragment extends MusicPlayerControls
         return v;
     }
 
+    @OnClick(R.id.btnPlaylist)
+    public void buttonPlaylistWasClicked(){
+        dismiss();
+    }
+
     @OnClick(R.id.btnNext)
     public void buttonNextWasClicked() {
         // check if next song is there or not
