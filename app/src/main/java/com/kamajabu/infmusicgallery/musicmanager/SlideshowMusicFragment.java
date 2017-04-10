@@ -5,32 +5,24 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.kamajabu.infmusicgallery.R;
-import com.kamajabu.infmusicgallery.activity.SlideshowDialogFragment;
 import com.kamajabu.infmusicgallery.model.Image;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -57,15 +49,8 @@ public class SlideshowMusicFragment extends MusicPlayerControls
         ButterKnife.bind(this, v);
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
 
-
         images = (ArrayList<Image>) getArguments().getSerializable("images");
         selectedPosition = getArguments().getInt("position");
-
-        myViewPagerAdapter = new MyViewPagerAdapter();
-        viewPager.setAdapter(myViewPagerAdapter);
-        viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
-
-        setCurrentItem(selectedPosition);
 
         mp = new MediaPlayer();
         songManager = new SongsManager();
@@ -79,8 +64,14 @@ public class SlideshowMusicFragment extends MusicPlayerControls
         Context playListContext = v.getContext();
         songsList = songManager.getPlayListFromContent(playListContext);
 
+        myViewPagerAdapter = new MyViewPagerAdapter();
+        viewPager.setAdapter(myViewPagerAdapter);
+        viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+
+        setCurrentItem(selectedPosition);
+
         // By default play first song
-        playSong(0);
+        playSong(selectedPosition);
 
         return v;
     }
@@ -121,7 +112,6 @@ public class SlideshowMusicFragment extends MusicPlayerControls
             // play selected song
             playSong(currentSongIndex);
         }
-
     }
 
     public void playSong(int songIndex) {
@@ -186,7 +176,6 @@ public class SlideshowMusicFragment extends MusicPlayerControls
         mHandler.removeCallbacks(mUpdateTimeTask);
     }
 
-
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         mHandler.removeCallbacks(mUpdateTimeTask);
@@ -234,6 +223,8 @@ public class SlideshowMusicFragment extends MusicPlayerControls
 
         @Override
         public void onPageSelected(int position) {
+            playSong(position);
+            currentSongIndex = position;
         }
 
         @Override
@@ -245,14 +236,12 @@ public class SlideshowMusicFragment extends MusicPlayerControls
         }
     };
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mHandler.removeCallbacks(mUpdateTimeTask);
         mp.release();
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -300,12 +289,9 @@ public class SlideshowMusicFragment extends MusicPlayerControls
             return view == obj;
         }
 
-
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
         }
     }
-
-
 }

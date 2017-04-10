@@ -75,11 +75,11 @@ public class SongsManager {
 
 
         String[] names = {"birthday",  "black ant", "box cat",  "energy", "faithful_dog", "humsafar",
-                "jason_shaw", "night_owl", "romantic", "siesta", "siri", "springish",  "starling"};
+                "jason_shaw", "night_owl", "romantic", "siesta", "siri", "springish"};
 
         int[] ids = {R.raw.birthday, R.raw.black_ant, R.raw.box_cat, R.raw.energy, R.raw.faithful_dog,
                 R.raw.humsafar, R.raw.jason_shaw, R.raw.night_owl, R.raw.romantic, R.raw.siesta, R.raw.siri,
-                R.raw.springish, R.raw.starling };
+                R.raw.springish };
 
         for(int i = 0; i<names.length; i++) {
             HashMap<String, String> song = new HashMap<>();
