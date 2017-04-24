@@ -24,17 +24,13 @@ import butterknife.OnClick;
 
 public abstract class MusicPlayerControls extends DialogFragment {
 
-    protected String TAG = SlideshowMusicFragment.class.getSimpleName();
     protected ArrayList<Image> images;
     protected ViewPager viewPager;
-    protected SlideshowMusicFragment.MyViewPagerAdapter myViewPagerAdapter;
-    protected TextView lblCount, lblTitle, lblDate;
+    protected MyViewPagerAdapter myViewPagerAdapter;
     protected int selectedPosition = 0;
 
     //music player fields
-
     protected static final String RES_PREFIX = "android.resource://com.kamajabu.infmusicgallery/";
-
 
     // Media Player
     protected MediaPlayer mp;

@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.kamajabu.infmusicgallery.R;
 import com.kamajabu.infmusicgallery.adapter.GalleryAdapter;
+import com.kamajabu.infmusicgallery.adapter.RecyclerTouchListener;
 import com.kamajabu.infmusicgallery.model.DataLoader;
 import com.kamajabu.infmusicgallery.musicmanager.SlideshowMusicFragment;
 
@@ -48,7 +49,7 @@ public class MainActivity extends Activity {
 
         recyclerView.addOnScrollListener(scrollListener);
 
-        recyclerView.addOnItemTouchListener(new GalleryAdapter.RecyclerTouchListener(getApplicationContext(),
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),
                 recyclerView, galleryListener));
     }
 
