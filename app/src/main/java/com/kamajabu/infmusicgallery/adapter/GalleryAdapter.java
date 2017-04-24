@@ -42,7 +42,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
                                       .inflate(R.layout.gallery_thumbnail, parent, false);
 
         GridLayoutManager.LayoutParams lp = (GridLayoutManager.LayoutParams) itemView.getLayoutParams();
-        lp.height = parent.getMeasuredHeight() / 4;
+        lp.height = parent.getMeasuredHeight() / 4 + 3; //add few pixels to assure that default cells fill whole screen
         itemView.setLayoutParams(lp);
         return new MyViewHolder(itemView);
     }

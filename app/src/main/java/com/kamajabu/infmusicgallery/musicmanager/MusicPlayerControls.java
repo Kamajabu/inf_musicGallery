@@ -1,8 +1,8 @@
 package com.kamajabu.infmusicgallery.musicmanager;
 
+import android.app.DialogFragment;
 import android.media.MediaPlayer;
 import android.os.Handler;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
