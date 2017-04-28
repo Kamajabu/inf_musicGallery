@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.kamajabu.infmusicgallery.R;
@@ -36,7 +37,11 @@ public class MainActivity extends Activity {
         ButterKnife.bind(this);
         images = DataLoader.loadData();
 
-        mAdapter = new GalleryAdapter(getApplicationContext(), images);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+
+        mAdapter = new GalleryAdapter(getApplicationContext(), images, height);
         prepareRecyclerView();
         createListeners();
 

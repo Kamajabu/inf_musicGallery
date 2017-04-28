@@ -19,6 +19,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
 
     private List<Image> images;
     private Context mContext;
+    private int screenHeight;
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public ImageView thumbnail;
@@ -29,9 +31,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
         }
     }
 
-    public GalleryAdapter(Context context, List<Image> images) {
+    public GalleryAdapter(Context context, List<Image> images, int height) {
         mContext = context;
         this.images = images;
+        this.screenHeight = height;
     }
 
     @Override
@@ -40,7 +43,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
                 .inflate(R.layout.gallery_thumbnail, parent, false);
 
         GridLayoutManager.LayoutParams lp = (GridLayoutManager.LayoutParams) itemView.getLayoutParams();
-        lp.height = parent.getMeasuredHeight() / 4 + 3; //add few pixels to assure that default cells fill whole screen
+        lp.height = screenHeight / 4; //add few pixels to assure that default cells fill whole screen
         itemView.setLayoutParams(lp);
         return new MyViewHolder(itemView);
     }
